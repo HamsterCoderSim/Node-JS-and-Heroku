@@ -1,0 +1,43 @@
+﻿/* content 中的表格样式 */
+
+table{
+	border-collapse: collapse;/*让靠在一起的单元格只显示一个边框，边框不进行叠加*/
+	font-style:normal;      /* italic; 斜体*/
+	font-size:15px;
+	font-family:consolas, courier new, 楷体;
+}
+			
+table tr th{
+	border: solid 1px #ccc;
+	height: 40px;
+	width: 200px;
+	background-color: #eee;
+	white-space:nowrap;    /* 设置表格自动扩展列 */
+}
+
+table tr td{
+	border: solid 1px #ccc;
+	height: 45px;
+	text-align: left;
+	white-space:nowrap;
+}
+
+table tr:hover
+{
+	background-color: red;/*hover:鼠标移上去就会变成红色*/
+}
+
+markCode {
+    background-color: #eee;
+    border-radius: 3px;
+    font-family: courier, monospace;
+    padding: 0 3px;
+}
+
+#lst {
+	font-size:15px;
+	font-family:consolas, courier new, 微软雅黑;
+	color:#4F4F4F;
+	list-style-position:inside;                    /* 在文本中显示，看起来像缩进 */
+} 
+

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TinySTL之迭代器stl_iterator</title>
+    <link rel="shortcut icon" href="./img/bitbug_favicon.ico">
+    <link rel="stylesheet" href="../../plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/mobile.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <script type="text/javascript" src="../js/comment.js"></script>
+    <link rel="stylesheet" href="../highlight/styles/atom-one-dark.min.css">
+    <script src="../highlight/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+    <header>
+        <div class="layui-row header-bigimg"></div>
+        <div class="layui-row subject-color nav-row">
+            <div class="main-content nav-menu">
+                <div class="layui-row">
+                    <div class="layui-col-md2 logo-box">
+                        <a href="#" title="TinySTL 之 allocator 接口">
+                            <img src="../../imgs/canreplace/logo.png" alt="logo">
+                        </a>
+                    </div>
+                    <div class="layui-col-md7 menu-box">
+                        <ul class="menu-ul">
+                           <a href="../../index.html">
+                               <li>首页</li>
+                           </a>
+                            <a href="../../columntype.html">
+                                <li>技术文章</li>
+                            </a>
+                            <a href="#">
+                                <li>程序人生</li>
+                            </a>
+                            <a href="#">
+                                <li>生活</li>
+                            </a>
+                            <a href="#">
+                                <li>工具分享</li>
+                            </a>
+                            <a href="#">
+                                <li>关于我、关于博客</li>
+                            </a>
+                        </ul>
+                    </div>
+                    <div class="layui-col-md3 search-box">
+                        <div class="search-input-div">
+                            <div class="layui-row">
+                                <div class="layui-col-md10 input-box">
+                                    <input class="search-input" placeholder="请输入关键字进行搜索">
+                                </div>
+                                <div class="layui-col-md2 search-btn-box">
+                                    <img src="../../imgs/icon/search.png" height="36" width="36"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="main-content item-box">
+        <div class="item-type">
+            <div class="column-item layui-row">
+                <div class="column-item-title layui-row subject-second-color font-color1 font-bold">同类热门文章</div>
+                <div class="jianjie-p layui-row">
+                    <ul class="remen-ul">
+                        <li>
+                        <div class="remen-title layui-row">
+                            <a href="#">每个强者都会有背后的辛酸挫折每个强者都会有背后的辛酸挫个强者都会有背后个强者都会有背后折</a>
+                        </div>
+                        <div class="remen-readnum layui-row">阅读：2019</div>
+                    </li>
+                        <li>
+                            <div class="remen-title layui-row">
+                                <a href="#">每个强者都会有背后的辛酸挫折每个强者都会有背后的辛酸挫个强者都会有背后个强者都会有背后折</a>
+                            </div>
+                            <div class="remen-readnum layui-row">阅读：2019</div>
+                        </li>
+                        <li>
+                            <div class="remen-title layui-row">
+                                <a href="#">每个强者都会有背后的辛酸挫折每个强者都会有背后的辛酸挫个强者都会有背后个强者都会有背后折</a>
+                            </div>
+                            <div class="remen-readnum layui-row">阅读：2019</div>
+                        </li>
+                        <li>
+                            <div class="remen-title layui-row">
+                                <a href="#">每个强者都会有背后的辛酸挫折每个强者都会有背后的辛酸挫个强者都会有背后个强者都会有背后折</a>
+                            </div>
+                            <div class="remen-readnum layui-row">阅读：2019</div>
+                        </li>
+                        <li>
+                            <div class="remen-title layui-row">
+                                <a href="#">每个强者都会有背后的辛酸挫折每个强者都会有背后的辛酸挫个强者都会有背后个强者都会有背后折</a>
+                            </div>
+                            <div class="remen-readnum layui-row">阅读：2019</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="item-list">
+            <div class="article-content-box layui-row">
+                <h1>TinySTL 之迭代器 stl_iterator</h1>
+                <div class="article-param layui-row">
+                    2022-5-29 <span><a href="#">大BUG</a></span><span>阅读数：2019</span><span>评论数：15</span>&nbsp;&nbsp;
+                    <span class="hz-span layui-badge layui-bg-gray">C++</span>
+                    <span class="hz-span layui-badge layui-bg-gray">泛型编程</span>
+                    <span class="hz-span layui-badge layui-bg-gray">小项目</span>
+                </div>
+                <div class="article-prompt">
+                    提示：此篇文章需要了解 C++ 泛型编程的一些概念才能看得懂本文章。
+                </div>
+                <article>
+                    <p>之前在 stl_construct 一章的时候就提前看到了迭代器，这个对应的就是标准库中的迭代器内容，相当于指针的一层封装，用来遍历容器，迭代器用来作为容器和算法之间的桥梁，不同的容器对应有不同的迭代器类型，
+                        最基本的几种迭代器类型如下：
+                    </p>
+                    <blockquote><h3><b>迭代器类型</b></h3></blockquote>
+                    <p>5 种迭代器定义如下</p>
+                    <pre>
+                        <code class="language-cpp">
+struct input_iterator_tag { };                                               // 输入迭代器
+struct output_iterator_tag { };                                              // 输出迭代器
+struct forward_iterator_tag : public input_iterator_tag { };                 // 前向迭代器
+struct bidirectional_iterator_tag : public forward_iterator_tag { };         // 双向迭代器
+struct random_access_iterator_tag : public bidirectional_iterator_tag { };   // 随机迭代器
+                        </code>
+                    </pre>
+                    <p>
+                        这些迭代器的分类与从属关系，可以下图表示。直线与箭头代表的并非 C++ 的继承关系，而是所谓concept（概念）与refinement（强化）的关系。 
+                    </p>
+                    <p align="center"><img src="img/stl_iterator/iterator_type.png" alt="迭代器类型"></p>
+                    <blockquote><h3><b>迭代器定义</b></h3></blockquote>
+                    <p>标准的迭代器定义如下</p>
+                    <pre>
+                        <code class="language-cpp">
+template&lt;typename Category, typename T, typename Distance = ptrdiff_t, typename Pointer = T*, typename Reference = T&&gt;
+struct iterator // 迭代器定义
+{
+    typedef Category  iterator_category;                 // 迭代器类型
+    typedef T         value_type;                        // 迭代器所指对象的类型，即容器
+                                                         // 所存放对象数据类型/内存中存放数据类型
+    typedef Distance  difference_type;                   // 两个迭代器之间的距离
+    typedef Pointer   pointer;                           // 迭代器指针运算
+    typedef Reference reference;                         // 迭代器所指对象的引用
+};    
+                        </code>
+                    </pre>
+                    <blockquote><h3><b>迭代器萃取机</b></h3></blockquote>
+                    <p>
+                        迭代器萃取机用于提取迭代器所代表的数据类型，之前说过，迭代器是对 <markCode>operator new</markCode>返回来的指针的一层封装，而有时候可能想要直接使用原生指针来操作数据，所以这里提供原生指针的两种偏特化版本。
+                    </p>
+                    <pre>
+                        <code class="language-cpp">
+template &lt;typename I&gt;
+struct iterator_traits {                // 萃取机萃取类型
+        typedef typename I::iterator_category iterator_category;
+        typedef typename I::value_type value_type;
+        typedef typename I:difference_type difference_type;
+        typedef typename I::pointer pointer;
+        typedef typename I::reference reference;
+    };
+    
+
+template &lt;typename T&gt;
+struct iterator_traits&lt;T*&gt; {       // 针对原生指针的偏特化版本1
+    typedef random_access_iterator_tag           iterator_category;       // 原生指针是 random_access_iterator_tag 类型
+    typedef T                                    value_type;
+    typedef T*                                   pointer;
+    typedef T&                                   reference;
+    typedef ptrdiff_t                            difference_type;
+};
+    
+
+template &lt;typename T&gt;
+struct iterator_traits&lt;const T*&gt; { // 针对 const 原生指针的偏特化版本2
+    typedef random_access_iterator_tag           iterator_category;
+    typedef T                                    value_type;
+    typedef const T*                             pointer;
+    typedef const T&                             reference;
+    typedef ptrdiff_t                            difference_type;
+};
+                        </code>
+                    </pre>
+                    
+                    <blockquote><h3><b>作用于迭代器的函数</b></h3></blockquote>
+                    <p>下面介绍作用域<markCode>iterator</markCode>的成员函数</p>
+                    <p>
+                        <h4 align="center"><b> iterator_traits 成员函数</b></h4>
+                        <table border="0" cellspacing="2" cellpadding="0" style="margin:auto">
+                            <tr><th>函数</th>             <th>定义</th>
+                            <tr><td>template &lt;typename Iterator&gt;<br>typename iterator_traits&lt;Iterator&gt;::value_type*<br>value_type(const Iterator&);</td>       <td>萃取迭代器所指对象类型</td>
+                            <tr><td>template &lt;typename Iterator&gt;<br>typename iterator_traits&lt;Iterator&gt;::iterator_category<br>iterator_category(const Iterator&);</td>       <td>萃取迭代器类型</td>
+                            <tr><td>template &lt;typename InputIterator&gt;<br>typename iterator_traits&lt;InputIterator&gt;::difference_type<br>distance(InputIterator first, InputIterator last);</td>       <td>迭代器之间的距离</td>
+                            <tr><td>template &lt;typename InputIterator&gt;<br>typename iterator_traits&lt;InputIterator&gt;::difference_type<br>__distance(InputIterator first, InputIterator last,<br> input_iterator_tag);</td>       <td>input_iterator_tag迭代器之间<br>的距离</td>
+                            <tr><td>template &lt;typename RandomAccessIterator&gt;<br>typename iterator_traits&lt;RandomAccessIterator&gt;::difference_type<br>__distance(RandomAccessIterator first, RandomAccessIterator last,<br> random_access_iterator_tag);</td>       <td>random_access_iterator_tag迭<br>代器之间的距离</td>
+                            <tr><td>template &lt;typename InputIterator, typename Distance&gt;<br>void advance(InputIterator &i, Distance n);</td>       <td>迭代器移动n个距离</td>
+                            <tr><td>template &lt;typename InputIterator, typename Distance&gt;<br>void __advance(InputIterator &i, Distance n, input_iterator_tag);</td>       <td>input_iterator_tag迭代器移动n<br>个距离</td>
+                            <tr><td>template &lt;typename BidirectionalIterator, typename Distance&gt;<br>void __advance(BidirectionalIterator &i, Distance n,<br> bidirectional_iterator_tag);</td>       <td>bidirectional_iterator_tag迭代器移<br>动n个距离</td>
+                            <tr><td>template &lt;typename RandomAccessIterator, typename Distance&gt;<br>void __advance(RandomAccessIterator &i, Distance n,<br> random_access_iterator_tag);</td>       <td>random_access_iterator_tag迭<br>代器移动n个距离</td>
+                        </table>
+                    </p>
+                    
+                    <blockquote><h3><b>源码</b></h3></blockquote>
+                    <p> 本章迭代器以及对迭代器相关的操作定义如下，另外，后来的标准库添加了翻转链表的操作，为了减少代码量，方便阅读，这里就先不定义了迭代器的反转操作。
+                        <pre><code class="language-cpp">
+#ifndef STL_ITERATOR_H
+#define STL_ITERATOR_H
+
+#include &lt;cstddef&gt;
+
+namespace TinySTL {
+    // 1. 定义5种迭代器类型
+    struct input_iterator_tag { };                                               // 输入迭代器
+    struct output_iterator_tag { };                                              // 输出迭代器
+    struct forward_iterator_tag : public input_iterator_tag { };                 // 前向迭代器
+    struct bidirectional_iterator_tag : public forward_iterator_tag { };         // 双向迭代器
+    struct random_access_iterator_tag : public bidirectional_iterator_tag { };   // 随机迭代器
+
+    // 2. 定义迭代器
+    template &lt;typename Category, typename T, typename Distance=ptrdiff_t, typename Pointer=T*, typename Reference=T&&gt;
+    struct iterator {
+        typedef Category     iterator_category;
+        typedef T            value_type;
+        typedef Pointer      pointer;
+        typedef Reference    reference;
+        typedef Distance     difference_type;
+    };
+
+    // 3. 定义萃取机
+    template &lt;typename T&gt;
+    struct iterator_traits {
+        typedef random_access_iterator_tag     iterator_category;
+        typedef T                              value_type;
+        typedef T*                             pointer;
+        typedef T&                             reference;
+        typedef ptrdiff_t                      difference_type;
+    };
+
+    template &lt;typename T&gt;
+    struct iterator_traits<T*> {               // 偏特化原生指针版本1
+        typedef random_access_iterator_tag iterator_category;
+        typedef T                          value_type;
+        typedef T*                         pointer;
+        typedef T&                         reference;
+        typedef ptrdiff_t                  difference_type;
+    };
+
+    template &lt;typename T&gt;
+    struct iterator_traits&lt;const T*&gt; {        // 偏特化原生指针版本2
+        typedef random_access_iterator_tag           iterator_category;
+        typedef T                                    value_type;
+        typedef const T*                             pointer;
+        typedef const T&                             reference;
+        typedef ptrdiff_t                            difference_type;
+    };
+
+    // 4. 定义函数 iterator_category() 萃取迭代器类型
+    template &lt;typename Iterator&gt;
+    typename iterator_traits&lt;Iterator&gt;::iterator_category
+    iterator_category(const Iterator&) {
+        typedef typename iterator_traits&lt;Iterator&gt;::iterator_category category;
+        return category();
+    }
+
+    // 5. 定义函数 distance_type() 萃取迭代器的距离类型
+    template &lt;typename Iterator&gt;
+    typename iterator_traits&lt;Iterator&gt;::difference_type*
+    distance_type(const Iterator&) {
+        return static_cast<typename iterator_traits&lt;Iterator&gt;::difference_type*> (0);
+    }
+
+    // 6. 定义函数 value_type() 萃取迭代器所指对象类型
+    template &lt;typename Iterator&gt;
+    typename iterator_traits&lt;Iterator&gt;::value_type*
+    value_type(const Iterator&) {
+        return static_cast&lt;typename iterator_traits&lt;Iterator&gt;::value_type*&gt; (0);
+    }
+
+    // 7. 定义函数 distance() 计算 first 和 last 之间的距离
+    //// input_iterator_tag, forward_iterator_tag, bidirectional_iterator_tag
+    template &lt;typename InputIterator&gt;
+    typename iterator_traits&lt;InputIterator&gt;::difference_type
+    __distance(InputIterator first, InputIterator last, input_iterator_tag) {            
+        typename iterator_traits&lt;InputIterator&gt;::difference_type n = 0;
+        while (first != last) {
+            first++;
+            n++;
+        }
+        return n;
+    }
+
+    //// random_access_iterator_tag
+    template &lt;typename RandomAccessIterator&gt;
+    typename iterator_traits&lt;RandomAccessIterator&gt;::difference_type
+    __distance(RandomAccessIterator first, RandomAccessIterator last, random_access_iterator_tag) {
+        return last - first;                                                             
+    }
+
+    template &lt;typename InputIterator&gt;
+    typename iterator_traits&lt;InputIterator&gt;::difference_type
+    distance(InputIterator first, InputIterator last) {
+        typedef typename iterator_traits&lt;InputIterator&gt;::iterator_category category;
+        return __distance(first, last, category());
+    }
+
+    // 8. 定义函数 advance() 使得指针向前移动
+    //// input_iterator_tag, forward_iterator_tag
+    template &lt;typename InputIterator, typename Distance&gt;
+    void __advance(InputIterator &i, Distance n, input_iterator_tag) {                    
+        while (n--)
+            ++i;
+    }
+
+    //// bidirectional_iterator_tag
+    template &lt;typename BidirectionalIterator, typename Distance&gt;
+    void __advance(BidirectionalIterator &i, Distance n, bidirectional_iterator_tag) {    
+        if (n > = 0)
+            while( n-- ) ++i;
+        else
+            while ( n++ ) --i;
+    }
+
+    //// random_access_iterator_tag
+    template &lt;typename RandomAccessIterator, typename Distance&gt;
+    void __advance(RandomAccessIterator &i, Distance n, random_access_iterator_tag) {     
+        i += n;
+    }
+
+    template &lt;typename InputIterator, typename Distance&gt;
+    void advance(InputIterator &i, Distance n) {
+        __advance(i, n, iterator_category(i));                              
+    }
+}
+
+
+#endif 
+                        </code></pre>
+                    </p>
+                    <blockquote><h3><b>测试</b></h3></blockquote>
+                    <p>
+                        测试的例子如下
+                    </p>
+                </article>
+                <link rel="stylesheet" href="../css/gittalk.css">
+                <script src="../js/gittalk.js"></script>
+                <div id="commentContainer"> </div>
+                <script>
+                    const gitalk = new Gitalk({
+                        clientID: '1c4831adc1089da8523c',
+                        clientSecret: 'f09eb05941ca14f7ac95a1e83ba8759850934868',
+                        repo: 'HamsterCoderSim.github.io',      // The repository of store comments,
+                        owner: 'HamsterCoderSim',
+                        admin: ['HamsterCoderSim'],
+                        id: location.pathname,      // Ensure uniqueness and length less than 50
+                        distractionFreeMode: false  // Facebook-like distraction free mode
+                    })
+                    gitalk.render('commentContainer')
+                </script>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-box">
+            <div class="main-content">
+                <strong>Copyright</strong> &nbsp;2019.01.16  &nbsp;by  &nbsp;<a href="#">大BUG</a><span>备案号：<a href="http://www.miitbeian.gov.cn/" target="_blank">蜀ICP备16031990号-2</a></span>
+            </div>
+        </div>
+    </footer>
+<script src="../../plugin/layui/layui.js"></script>
+<script>
+    layui.use('laypage', function(){
+        var laypage = layui.laypage;
+
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'pageItem', //注意，这里的 test1 是 ID，不用加 # 号
+            count: 50, //数据总数，从服务端得到
+            jump: function(obj, first){
+                //obj包含了当前分页的所有参数，比如：
+                console.log('当前页数：'+obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                console.log('每页数量：'+obj.limit); //得到每页显示的条数
+                //首次不执行
+                if(!first){
+                   console.log('执行')
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

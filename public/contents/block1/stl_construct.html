@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TinySTL 之建构和解构工具 stl_construct</title>
+    <link rel="shortcut icon" href="./img/bitbug_favicon.ico">
+    <link rel="stylesheet" href="../../plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/mobile.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <script type="text/javascript" src="../js/comment.js"></script>
+    <link rel="stylesheet" href="../highlight/styles/atom-one-dark.min.css">
+    <script src="../highlight/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+    <header>
+        <div class="layui-row header-bigimg"></div>
+        <div class="layui-row subject-color nav-row">
+            <div class="main-content nav-menu">
+                <div class="layui-row">
+                    <div class="layui-col-md2 logo-box">
+                        <a href="#" title="TinySTL 之内存处理工具">
+                            <img src="../../imgs/canreplace/logo.png" alt="logo">
+                        </a>
+                    </div>
+                    <div class="layui-col-md7 menu-box">
+                        <ul class="menu-ul">
+                           <a href="../../index.html">
+                               <li>首页</li>
+                           </a>
+                            <a href="../../columntype.html">
+                                <li>技术文章</li>
+                            </a>
+                            <a href="#">
+                                <li>程序人生</li>
+                            </a>
+                            <a href="#">
+                                <li>生活</li>
+                            </a>
+                            <a href="#">
+                                <li>工具分享</li>
+                            </a>
+                            <a href="#">
+                                <li>关于我、关于博客</li>
+                            </a>
+                        </ul>
+                    </div>
+                    <div class="layui-col-md3 search-box">
+                        <div class="search-input-div">
+                            <div class="layui-row">
+                                <div class="layui-col-md10 input-box">
+                                    <input class="search-input" placeholder="请输入关键字进行搜索">
+                                </div>
+                                <div class="layui-col-md2 search-btn-box">
+                                    <img src="../../imgs/icon/search.png" height="36" width="36"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="main-content item-box">
+        <div class="item-type">
+            <div class="column-item layui-row">
+                <div class="column-item-title layui-row subject-second-color font-color1 font-bold">同类热门文章</div>
+                <div class="jianjie-p layui-row">
+                    <ul class="remen-ul">
+                        <li>
+                        <div class="remen-title layui-row">
+                            <a href="#">每个强者都会有背后的辛酸挫折每个强者都会有背后的辛酸挫个强者都会有背后个强者都会有背后折</a>
+                        </div>
+                        <div class="remen-readnum layui-row">阅读：2019</div>
+                    </li>
+                        <li>
+                            <div class="remen-title layui-row">
+                                <a href="#">每个强者都会有背后的辛酸挫折每个强者都会有背后的辛酸挫个强者都会有背后个强者都会有背后折</a>
+                            </div>
+                            <div class="remen-readnum layui-row">阅读：2019</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="item-list">
+            <div class="article-content-box layui-row">
+                <h1>TinySTL 之建构和结构工具 stl_construct</h1>
+                <div class="article-param layui-row">
+                    2022-5-26 <span><a href="#">大BUG</a></span><span>阅读数：2019</span><span>评论数：15</span>&nbsp;&nbsp;
+                    <span class="hz-span layui-badge layui-bg-gray">C++</span>
+                    <span class="hz-span layui-badge layui-bg-gray">泛型编程</span>
+                    <span class="hz-span layui-badge layui-bg-gray">小项目</span>
+                </div>
+                <div class="article-prompt">
+                    提示：此篇文章需要了解 C++ 泛型编程的一些概念才能看得懂本文章。
+                </div>
+                <article>
+                    <p>
+                        STL 有 6 大部件，其中 allocator 对应的就是函数中的内存分配与对象建立，而为了减少代码量，allocator 把这部分的工作剥离开放到了 stl_construct.h 中，使用<markCode>placement new</markCode>函数实现内存的申请。
+                        关于 C++ 内存申请的三种方式：new, operator new 和 placement new，可以查看 <a href="https://yosef-gao.github.io/2016/10/01/cpp-new/">这篇博客</a>，里面较为详细地讲解了三种方式的区别，并且给了相应的的
+                        例子。
+                    </p>
+                    <p>
+                        注意，这里可能会用到后面使用到的例子，例如 ForwardIter，表示的是容器的迭代器，不过都很好理解。
+                    </p>
+                    <blockquote><h3><b>成员类型</b></h3></blockquote>
+                        无
+                    <blockquote><h3><b>成员函数</b></h3></blockquote>
+                        <p>
+                            <h4 align="center"><b> construct 成员函数</b></h4>
+                            <table border="0" cellspacing="0" cellpadding="0" style="margin:auto">
+                                <tr> <th>函数</th>                                                                                                                   <th>定义</th>
+                                <tr> <td>template &lt;typename T&gt; <br>void construct(T *ptr)</td>                                                                <td>构造函数1</td>
+                                <tr> <td>template &lt;typename T1, class  T2&gt;void <br>void construct(T1 *ptr, const T2 &&value);</td>                            <td>构造函数2</td>
+                                <tr> <td>template &lt;typename T1, class... Args&gt;<br>void construct(T *ptr, Args&&... args);</td>                                <td>构造函数3</td>
+                                <tr> <td>template &lt;typename T&gt;<br>void destroy(T *ptr);</td>                                                                  <td>析构函数1</td>
+                                <tr> <td>template &lt;typename ForwardIterator&gt;<br>void destroy(ForwardIterator first, ForwardIterator, last);</td>              <td>释放分配的内存</td>
+                                <tr> <td>template &lt;typename T&gt;<br>void destroy_one(T*, std::true_type);</td>                                                  <td>释放内存 ptr</td>
+                                <tr> <td>template &lt;typename T&gt;<br>void destroy_one(T*, std::false_type);</td>                                                 <td>释放内存 ptr</td>
+                                <tr> <td>template &lt;typename ForwardIter&gt;<br>void destroy_cat(ForwardIter first, ForwardIter last, std::true_type);</td>       <td>循环释放容器内存</td>
+                                <tr> <td>template &lt;typename ForwardIter&gt;<br>void destroy_cat(ForwardIter first, ForwardIter last, std::false_type);</td>      <td>循环释放容器内存</td>
+                            </table>
+                        </p>
+                    
+                    <blockquote><h3><b>源码</b></h3></blockquote>
+                    <p>关于源码部分的实现，主要借鉴于 <span style="color: rgb(65, 140, 175);">STL 源码剖析</span>这本书，并且 C++11 的一些新特性实现，这里涉及到了不定参数模板 <markCode>typename<... Args></markCode>
+                        ，<markCode>std::move</markCode>，完美转发等概念，需要提前掌握一下。
+                    </p>
+                    <p>
+                        <pre><code class="language-cpp">   
+#ifndef TINYSTL_ALLOCATOR_H_
+#define TINYSTL_ALLOCATOR_H_
+
+// 这个头文件包含两个函数 construct，destroy
+// construct : 负责对象的构造
+// destroy   : 负责对象的析构
+
+#include &lt;new&gt;
+
+#include "type_traits.h"
+#include "iterator.h"
+
+namespace TinySTL
+{
+
+// construct 构造对象
+    
+// 使用placement new在分配的内存ptr初始化对象，构造函数T()
+template &lt;typename T&gt;
+void construct(T* ptr)
+{
+    ::new ((void*)ptr) T();                           
+}
+
+// 使用placement new在分配的内存ptr初始化对象，构造函数T(value);
+template &lt;typename T1, typename T2&gt;
+void construct(T1* ptr, const T2& value)
+{
+    ::new ((void*)ptr) T1(value);                    
+}
+
+template &lt;typename T, typename... Args&gt;
+void construct(T* ptr, Args&&... args)
+{
+    ::new ((void*)ptr) T(TinySTL::forward<Args>(args)...);     //  使用forward实现不定参数的完美转发
+}
+
+// destroy 将对象析构
+
+template &lt;typename T&gt;
+void destroy_one(T*, std::true_type) {}
+
+// 调用了析构函数 ~T()，但是 pointer 所在内存并没有释放
+// 需要分配器的 operator delete(ptr) 释放
+template &lt;typename T&gt;
+void destroy_one(T* pointer, std::false_type)
+{
+    if (pointer != nullptr)
+    {
+        pointer->~T();                                       
+    }
+}
+
+template &lt;typename ForwardIter&gt;
+void destroy_cat(ForwardIter , ForwardIter , std::true_type) {}
+
+template &lt;typename ForwardIter&gt;
+void destroy_cat(ForwardIter first, ForwardIter last, std::false_type)
+{
+    for (; first != last; ++first)
+        destroy(&*first);
+}
+
+template &lt;typename T&gt;
+void destroy(T* pointer)
+{
+    destroy_one(pointer, std::is_trivially_destructible<T>{});
+}
+
+template &lt;typename ForwardIter&gt;
+void destroy(ForwardIter first, ForwardIter last)
+{
+    destroy_cat(first, last, std::is_trivially_destructible<
+            typename iterator_traits&lt;ForwardIter&gt;::value_type>{});
+}
+
+} // namespace TinySTL
+
+#endif // !TINYSTL_ALLOCATOR_H_
+
+                        </code></pre>
+                    </p>
+                    <blockquote><h3><b>测试</b></h3></blockquote>
+                    <p>
+                        这部分必须配合后面的 stl_allocator 一起测试，因为需要 allocator 来申请和释放内存。
+                    </p>
+                </article>
+                <link rel="stylesheet" href="../css/gittalk.css">
+                <script src="../js/gittalk.js"></script>
+                <div id="commentContainer"> </div>
+                <script>
+                    const gitalk = new Gitalk({
+                        clientID: '1c4831adc1089da8523c',
+                        clientSecret: 'f09eb05941ca14f7ac95a1e83ba8759850934868',
+                        repo: 'HamsterCoderSim.github.io',      // The repository of store comments,
+                        owner: 'HamsterCoderSim',
+                        admin: ['HamsterCoderSim'],
+                        id: location.pathname,      // Ensure uniqueness and length less than 50
+                        distractionFreeMode: false  // Facebook-like distraction free mode
+                    })
+                    gitalk.render('commentContainer')
+                </script>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-box">
+            <div class="main-content">
+                <strong>Copyright</strong> &nbsp;2019.01.16  &nbsp;by  &nbsp;<a href="#">大BUG</a><span>备案号：<a href="http://www.miitbeian.gov.cn/" target="_blank">蜀ICP备16031990号-2</a></span>
+            </div>
+        </div>
+    </footer>
+<script src="../../plugin/layui/layui.js"></script>
+<script>
+    layui.use('laypage', function(){
+        var laypage = layui.laypage;
+
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'pageItem', //注意，这里的 test1 是 ID，不用加 # 号
+            count: 50, //数据总数，从服务端得到
+            jump: function(obj, first){
+                //obj包含了当前分页的所有参数，比如：
+                console.log('当前页数：'+obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                console.log('每页数量：'+obj.limit); //得到每页显示的条数
+                //首次不执行
+                if(!first){
+                   console.log('执行')
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

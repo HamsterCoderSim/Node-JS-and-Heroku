@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TinySTL之内存处理工具 stl_uninitialized</title>
+    <link rel="shortcut icon" href="./img/bitbug_favicon.ico">
+    <link rel="stylesheet" href="../../plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/mobile.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <script type="text/javascript" src="../js/comment.js"></script>
+    <link rel="stylesheet" href="../highlight/styles/atom-one-dark.min.css">
+    <script src="../highlight/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+    <header>
+        <div class="layui-row header-bigimg"></div>
+        <div class="layui-row subject-color nav-row">
+            <div class="main-content nav-menu">
+                <div class="layui-row">
+                    <div class="layui-col-md2 logo-box">
+                        <a href="#" title="TinySTL 之 allocator 接口">
+                            <img src="../../imgs/canreplace/logo.png" alt="logo">
+                        </a>
+                    </div>
+                    <div class="layui-col-md7 menu-box">
+                        <ul class="menu-ul">
+                           <a href="../../index.html">
+                               <li>首页</li>
+                           </a>
+                            <a href="../../columntype.html">
+                                <li>技术文章</li>
+                            </a>
+                            <a href="#">
+                                <li>程序人生</li>
+                            </a>
+                            <a href="#">
+                                <li>生活</li>
+                            </a>
+                            <a href="#">
+                                <li>工具分享</li>
+                            </a>
+                            <a href="#">
+                                <li>关于我、关于博客</li>
+                            </a>
+                        </ul>
+                    </div>
+                    <div class="layui-col-md3 search-box">
+                        <div class="search-input-div">
+                            <div class="layui-row">
+                                <div class="layui-col-md10 input-box">
+                                    <input class="search-input" placeholder="请输入关键字进行搜索">
+                                </div>
+                                <div class="layui-col-md2 search-btn-box">
+                                    <img src="../../imgs/icon/search.png" height="36" width="36"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="main-content item-box">
+        <div class="item-type">
+            <div class="column-item layui-row">
+                <div class="column-item-title layui-row subject-second-color font-color1 font-bold">同类热门文章</div>
+                <div class="jianjie-p layui-row">
+                    <ul class="remen-ul">
+                        <li>
+                        <div class="remen-title layui-row">
+                            <a href="#">每个强者都会有背后的辛酸挫折每个强者都会有背后的辛酸挫个强者都会有背后个强者都会有背后折</a>
+                        </div>
+                        <div class="remen-readnum layui-row">阅读：2019</div>
+                    </li>
+                        <li>
+                            <div class="remen-title layui-row">
+                                <a href="#">每个强者都会有背后的辛酸挫折每个强者都会有背后的辛酸挫个强者都会有背后个强者都会有背后折</a>
+                            </div>
+                            <div class="remen-readnum layui-row">阅读：2019</div>
+                        </li>
+                        <li>
+                            <div class="remen-title layui-row">
+                                <a href="#">每个强者都会有背后的辛酸挫折每个强者都会有背后的辛酸挫个强者都会有背后个强者都会有背后折</a>
+                            </div>
+                            <div class="remen-readnum layui-row">阅读：2019</div>
+                        </li>
+                        <li>
+                            <div class="remen-title layui-row">
+                                <a href="#">每个强者都会有背后的辛酸挫折每个强者都会有背后的辛酸挫个强者都会有背后个强者都会有背后折</a>
+                            </div>
+                            <div class="remen-readnum layui-row">阅读：2019</div>
+                        </li>
+                        <li>
+                            <div class="remen-title layui-row">
+                                <a href="#">每个强者都会有背后的辛酸挫折每个强者都会有背后的辛酸挫个强者都会有背后个强者都会有背后折</a>
+                            </div>
+                            <div class="remen-readnum layui-row">阅读：2019</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="item-list">
+            <div class="article-content-box layui-row">
+                <h1>TinySTL之内存处理工具 stl_uninitialized</h1>
+                <div class="article-param layui-row">
+                    2022-06-01 <span><a href="#">大BUG</a></span><span>阅读数：2019</span><span>评论数：15</span>&nbsp;&nbsp;
+                    <span class="hz-span layui-badge layui-bg-gray">C++</span>
+                    <span class="hz-span layui-badge layui-bg-gray">泛型编程</span>
+                    <span class="hz-span layui-badge layui-bg-gray">小项目</span>
+                </div>
+                <div class="article-prompt">
+                    提示：此篇文章需要了解 C++ 泛型编程的一些概念才能看得懂本文章。
+                </div>
+                <article>
+                    <p>
+                        STL 中有 5 各函数模板，作用在未初始化的空间上，这 5 个函数模板如下
+                    </p>
+                    <p align="center"><img src="img/stl_uninitialized/fig1.png" alt="5个函数模板" width="850px"></p>
+                    <p>其中的 <markCode>construct()</markCode> 和 <markCode>destroy()</markCode> 函数在空间分配器（allocator）时用到过，这里就介绍其他 3 个函数。 </p>
+                    <blockquote><h3><b>函数模板 uninitialized_copy</b></h3></blockquote>
+                    <p>代码如下：</p>
+                    <pre>
+                        <code class="language-cpp">
+#include &lt;iostream&gt;
+    // 类
+    struct __true_type {
+    };
+    
+    struct __false_type {
+    };
+    
+    // 定义的几个类
+    struct Cat { };            // Cat
+    
+    struct Dog { };            // Dog
+    
+    struct Fish { };
+    
+    
+    // 类的特性
+    template &lt;typename T&gt;
+    struct type_traits {
+    
+    };
+    
+    template &lt;&gt; 
+    struct type_traits&lt;Cat&gt; {
+        typedef __false_type isEdible;          // 不可食用
+        typedef __true_type isFed;              // 可被饲养
+    };
+    
+    template &lt;&gt; 
+    struct type_traits&lt;Dog&gt; {
+        typedef __false_type isEdible;          // 不可食用
+        typedef __true_type isFed;              // 可被饲养
+    };
+    
+    template &lt;&gt; 
+    struct type_traits&lt;Fish&gt; {
+        typedef __true_type isEdible;          // 不可食用
+        typedef __true_type isFed;              // 可被饲养
+    };
+    
+    
+    bool canBeFood(__true_type) {
+        std::cout << "Can be Eaten." << std::endl;
+        return true;
+    }
+    
+    bool canBeFood(__false_type) {
+        std::cout << "Can not be Eaten." << std::endl;
+        return false;
+    }
+    
+    
+    int main() {
+        typedef typename type_traits&lt;Cat&gt;::isEdible category1;    // 萃取猫的可食用性
+        canBeFood(category1());
+        return 0;
+    }
+                        </code>
+                    </pre>
+                    <p>
+                        上述代码中的 <markCode>canBeFood(__true_type)</markCode> 和 <markCode>canBeFood(__false_type)</markCode> 中通过类型来区别函数，并不需要实例化的对象
+                    </p>
+                    <p align="center"><img src="img/type_traits/fig.png" alt="迭代器类型"></p>
+                    <blockquote><h3><b>C/C++编程：trivial 和 non-trivial</b></h3></blockquote>
+                    <p>
+                        在 C/C++ 的 STL 编程中，针对类型 T，可以大致分为 trivial 和 non-trivial 类型。这个类型是对 T 的四种函数来说的：
+                    </p>
+                    <ul id="lst">
+                        <li>构造函数 (ctor)</li>
+                        <li>复制构造函数 (copy)</li>
+                        <li>赋值函数 (assignment) </li>
+                        <li>析构函数 (dtor)</li>
+                    </ul>
+                    <p>
+                        如果上面的函数满足下面 3 条里的某一条：
+                    </p>
+                    <ol id="lst">
+                        <li>显示 (explicit) 定义了这四条函数；</li>
+                        <li>类里面有非静态非 POD 的数据成员；</li>
+                        <li>有基类。</li>
+                    </ol>
+                    <p> 那么上面的四种函数是 non-trivial 函数，也就是有意义的函数。因为这些函数里面有了一些必要的操作，例如类成员的初始化、释放内存等操作。 POD 的意思是 Plain Old Data，也就是 C++
+                        的内建类型或传统的 C 结构体类型。
+                    </p>
+                    <p>
+                        比如，下面定义的类 T 就是一个 POD 类型的类，而 T1 由于显式定义了构造函数和拥有了一个非 POD 的数据成员 <markCode>std::string</markCode>，所以是一个非 POD 类型的类。
+                    </p>
+                    <pre>
+                        <code class="language-cpp">
+// 整个T是POD类型
+class T {
+    // 没有显式定义ctor/dtor/copy/assignemt 所以都是trivial
+    int a; // POD类型
+};
+    
+// 整个T1是非POD类型
+class T1 {
+    T1() { }           // 显式定义了构造函数，所以是non-trivial ctor
+    
+    // 没有显式定义ctor/dtor/copy/assignemt 所以都是trivial
+    int a;         // POD类型
+    std::string b; // 非POD类型
+};
+                        </code>
+                    </pre>
+                    <p><b>那这有什么用处呢？ </b></p>
+                    <p>如果这个类是 trivial ctor/dtor/copy/assignment 函数，我们对这个类进行构造、析构、拷贝和赋值的时候可以采用最有效率的方法，不调用无所事事正真的那些ctor/dtor等，而直接采
+                        用内存操作如 <markCode>malloc()</markCode>、<markCode>memcpy()</markCode>等提高性能，这也是SGI STL内部干的事情。</p>
+                    <p>比如 STL 的 copy 算法最基本的想法是这样的：</p>
+                    <pre>
+                        <code class="language-cpp">
+// 非POD重载指针数值
+template &lt;typename T&gt; 
+void copy(T* source, T* destination, int n, __false_type)
+{
+    // 省略异常处理
+    for (; n > 0; n--,source++,destination++)
+    {
+        // 调用source的复制构造函数
+        constructor(source, *destination);
+    }
+}
+    
+// POD重载指针数值
+template &lt;typename T&gt; 
+void copy(T* source, T* destination, int n, __false_type)
+{
+    // 省略异常处理
+    memmove(source, destination, n);
+}
+                        </code>
+                    </pre>
+                    <p>然实际的 <markCode>copy()</markCode> 比这个复杂多了，有非常多的特化等，这个只是其中一方面而已。</p>
+                    <blockquote><h3><b>迭代器萃取机</b></h3></blockquote>
+                    <p>
+                        迭代器萃取机用于提取迭代器所代表的数据类型，之前说过，迭代器是对 <markCode>operator new</markCode>返回来的指针的一层封装，而有时候可能想要直接使用原生指针来操作数据，所以这里提供原生指针的两种偏特化版本。
+                    </p>
+                    
+                    
+                    <blockquote><h3><b>针对是否为 trivial 进行 type_traits</b></h3></blockquote>
+                    <p> 这里的 type_traits 使用了类模板偏特化的语法，对常见的类型进行特征萃取，代码位于 type_traits.h 中。
+                        <pre><code class="language-cpp">
+#ifndef TINYSTL_TYPE_TRAITS_H_
+#define TINYSTL_TYPE_TRAITS_H_
+
+// 这个头文件用于提取类型信息
+
+namespace TinySTL {
+
+struct __true_type {
+};
+
+struct __false_type {
+};
+
+template &lt;typename type&gt;
+struct __type_traits {
+    typedef __true_type this_dummy_must_be_first;
+    // 不要移除这个成员，它通知[有能力自动将 __type_traits 特化]
+    // 的编译器说，我们现在所看到的这个 __type_traits template 是
+    // 特殊的。这是为了确保万一编译器也是用一个名为 __type_traits 而其实
+    // 与此处定义无任何关联的 template 时，所有事情将顺利运作。
+    typedef __false_type    has_trivial_default_constructor;
+    typedef __false_type    has_trivial_copy_constructor;
+    typedef __false_type    has_trivial_assignment_operator;
+    typedef __false_type    has_trivial_destructor;
+    typedef __false_type    is_POD_type;
+};
+
+template &lt;&gt; struct __type_traits&lt;char&gt; {
+    typedef __true_type    has_trivial_default_constructor;
+    typedef __true_type    has_trivial_copy_constructor;
+    typedef __true_type    has_trivial_assignment_operator;
+    typedef __true_type    has_trivial_destructor;
+    typedef __true_type    is_POD_type;
+};
+
+template &lt;&gt; struct __type_traits&lt;signed char&gt; {
+    typedef __true_type    has_trivial_default_constructor;
+    typedef __true_type    has_trivial_copy_constructor;
+    typedef __true_type    has_trivial_assignment_operator;
+    typedef __true_type    has_trivial_destructor;
+    typedef __true_type    is_POD_type;
+};
+
+template &lt;&gt; struct __type_traits&lt;unsigned char&gt; {
+    typedef __true_type    has_trivial_default_constructor;
+    typedef __true_type    has_trivial_copy_constructor;
+    typedef __true_type    has_trivial_assignment_operator;
+    typedef __true_type    has_trivial_destructor;
+    typedef __true_type    is_POD_type;
+};
+
+template &lt;&gt; struct __type_traits&lt;short&gt; {
+    typedef __true_type    has_trivial_default_constructor;
+    typedef __true_type    has_trivial_copy_constructor;
+    typedef __true_type    has_trivial_assignment_operator;
+    typedef __true_type    has_trivial_destructor;
+    typedef __true_type    is_POD_type;
+};
+
+template &lt;&gt; struct __type_traits&lt;unsigned short&gt; {
+    typedef __true_type    has_trivial_default_constructor;
+    typedef __true_type    has_trivial_copy_constructor;
+    typedef __true_type    has_trivial_assignment_operator;
+    typedef __true_type    has_trivial_destructor;
+    typedef __true_type    is_POD_type;
+};
+
+template &lt;&gt; struct __type_traits&lt;int&gt; {
+    typedef __true_type    has_trivial_default_constructor;
+    typedef __true_type    has_trivial_copy_constructor;
+    typedef __true_type    has_trivial_assignment_operator;
+    typedef __true_type    has_trivial_destructor;
+    typedef __true_type    is_POD_type;
+};
+
+template &lt;&gt; struct __type_traits&lt;unsigned int&gt; {
+    typedef __true_type    has_trivial_default_constructor;
+    typedef __true_type    has_trivial_copy_constructor;
+    typedef __true_type    has_trivial_assignment_operator;
+    typedef __true_type    has_trivial_destructor;
+    typedef __true_type    is_POD_type;
+};
+
+template &lt;&gt; struct __type_traits&lt;long&gt; {
+    typedef __true_type    has_trivial_default_constructor;
+    typedef __true_type    has_trivial_copy_constructor;
+    typedef __true_type    has_trivial_assignment_operator;
+    typedef __true_type    has_trivial_destructor;
+    typedef __true_type    is_POD_type;
+};
+
+template &lt;&gt; struct __type_traits&lt;unsigned long&gt; {
+    typedef __true_type    has_trivial_default_constructor;
+    typedef __true_type    has_trivial_copy_constructor;
+    typedef __true_type    has_trivial_assignment_operator;
+    typedef __true_type    has_trivial_destructor;
+    typedef __true_type    is_POD_type;
+};
+
+template &lt;&gt; struct __type_traits&lt;float&gt; {
+    typedef __true_type    has_trivial_default_constructor;
+    typedef __true_type    has_trivial_copy_constructor;
+    typedef __true_type    has_trivial_assignment_operator;
+    typedef __true_type    has_trivial_destructor;
+    typedef __true_type    is_POD_type;
+};
+
+template &lt;&gt; struct __type_traits&lt;double&gt; {
+    typedef __true_type    has_trivial_default_constructor;
+    typedef __true_type    has_trivial_copy_constructor;
+    typedef __true_type    has_trivial_assignment_operator;
+    typedef __true_type    has_trivial_destructor;
+    typedef __true_type    is_POD_type;
+};
+
+template &lt;&gt; struct __type_traits&lt;long double&gt; {
+    typedef __true_type    has_trivial_default_constructor;
+    typedef __true_type    has_trivial_copy_constructor;
+    typedef __true_type    has_trivial_assignment_operator;
+    typedef __true_type    has_trivial_destructor;
+    typedef __true_type    is_POD_type;
+};
+
+// 注意：以下针对原生指标设计 __type_tratis 偏特化版本
+// 原生指标也被视为一种纯量型别
+template &lt;typename T>
+struct __type_traits&lt;T*&gt; {
+    typedef __true_type    has_trivial_default_constructor;
+    typedef __true_type    has_trivial_copy_constructor;
+    typedef __true_type    has_trivial_assignment_operator;
+    typedef __true_type    has_trivial_destructor;
+    typedef __true_type    is_POD_type;
+};
+
+struct __type_traits&lt;char*&gt; {
+    typedef __true_type    has_trivial_default_constructor;
+    typedef __true_type    has_trivial_copy_constructor;
+    typedef __true_type    has_trivial_assignment_operator;
+    typedef __true_type    has_trivial_destructor;
+    typedef __true_type    is_POD_type;
+};
+
+struct __type_traits&lt;signed char*&gt; {
+    typedef __true_type    has_trivial_default_constructor;
+    typedef __true_type    has_trivial_copy_constructor;
+    typedef __true_type    has_trivial_assignment_operator;
+    typedef __true_type    has_trivial_destructor;
+    typedef __true_type    is_POD_type;
+};
+
+struct __type_traits&lt;unsigned char*&gt; {
+    typedef __true_type    has_trivial_default_constructor;
+    typedef __true_type    has_trivial_copy_constructor;
+    typedef __true_type    has_trivial_assignment_operator;
+    typedef __true_type    has_trivial_destructor;
+    typedef __true_type    is_POD_type;
+};
+
+
+} // namespace TinySTL
+
+#endif
+                        </code></pre>
+                    </p>
+                    <blockquote><h3><b>测试</b></h3></blockquote>
+                    <p>
+                        测试的例子如下
+                    </p>
+                </article>
+                <link rel="stylesheet" href="../css/gittalk.css">
+                <script src="../js/gittalk.js"></script>
+                <div id="commentContainer"> </div>
+                <script>
+                    const gitalk = new Gitalk({
+                        clientID: '1c4831adc1089da8523c',
+                        clientSecret: 'f09eb05941ca14f7ac95a1e83ba8759850934868',
+                        repo: 'HamsterCoderSim.github.io',      // The repository of store comments,
+                        owner: 'HamsterCoderSim',
+                        admin: ['HamsterCoderSim'],
+                        id: location.pathname,      // Ensure uniqueness and length less than 50
+                        distractionFreeMode: false  // Facebook-like distraction free mode
+                    })
+                    gitalk.render('commentContainer')
+                </script>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-box">
+            <div class="main-content">
+                <strong>Copyright</strong> &nbsp;2019.01.16  &nbsp;by  &nbsp;<a href="#">大BUG</a><span>备案号：<a href="http://www.miitbeian.gov.cn/" target="_blank">蜀ICP备16031990号-2</a></span>
+            </div>
+        </div>
+    </footer>
+<script src="../../plugin/layui/layui.js"></script>
+<script>
+    layui.use('laypage', function(){
+        var laypage = layui.laypage;
+
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'pageItem', //注意，这里的 test1 是 ID，不用加 # 号
+            count: 50, //数据总数，从服务端得到
+            jump: function(obj, first){
+                //obj包含了当前分页的所有参数，比如：
+                console.log('当前页数：'+obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                console.log('每页数量：'+obj.limit); //得到每页显示的条数
+                //首次不执行
+                if(!first){
+                   console.log('执行')
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TinySTL 之空间配置器 stl_allocator</title>
+    <link rel="shortcut icon" href="./img/bitbug_favicon.ico">
+    <link rel="stylesheet" href="../../plugin/layui/css/layui.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/mobile.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <script type="text/javascript" src="../js/comment.js"></script>
+    <link rel="stylesheet" href="../highlight/styles/atom-one-dark.min.css">
+    <script src="../highlight/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+</head>
+<body>
+    <header>
+        <div class="layui-row header-bigimg"></div>
+        <div class="layui-row subject-color nav-row">
+            <div class="main-content nav-menu">
+                <div class="layui-row">
+                    <div class="layui-col-md2 logo-box">
+                        <a href="#" title="TinySTL 之 allocator 接口">
+                            <img src="../../imgs/canreplace/logo.png" alt="logo">
+                        </a>
+                    </div>
+                    <div class="layui-col-md7 menu-box">
+                        <ul class="menu-ul">
+                           <a href="../../index.html">
+                               <li>首页</li>
+                           </a>
+                            <a href="../../columntype.html">
+                                <li>技术文章</li>
+                            </a>
+                            <a href="#">
+                                <li>程序人生</li>
+                            </a>
+                            <a href="#">
+                                <li>生活</li>
+                            </a>
+                            <a href="#">
+                                <li>工具分享</li>
+                            </a>
+                            <a href="#">
+                                <li>关于我、关于博客</li>
+                            </a>
+                        </ul>
+                    </div>
+                    <div class="layui-col-md3 search-box">
+                        <div class="search-input-div">
+                            <div class="layui-row">
+                                <div class="layui-col-md10 input-box">
+                                    <input class="search-input" placeholder="请输入关键字进行搜索">
+                                </div>
+                                <div class="layui-col-md2 search-btn-box">
+                                    <img src="../../imgs/icon/search.png" height="36" width="36"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="main-content item-box">
+        <div class="item-type">
+            <div class="column-item layui-row">
+                <div class="column-item-title layui-row subject-second-color font-color1 font-bold">同类热门文章</div>
+                <div class="jianjie-p layui-row">
+                    <ul class="remen-ul">
+                        <li>
+                        <div class="remen-title layui-row">
+                            <a href="#">每个强者都会有背后的辛酸挫折每个强者都会有背后的辛酸挫个强者都会有背后个强者都会有背后折</a>
+                        </div>
+                        <div class="remen-readnum layui-row">阅读：2019</div>
+                    </li>
+                        <li>
+                            <div class="remen-title layui-row">
+                                <a href="#">每个强者都会有背后的辛酸挫折每个强者都会有背后的辛酸挫个强者都会有背后个强者都会有背后折</a>
+                            </div>
+                            <div class="remen-readnum layui-row">阅读：2019</div>
+                        </li>
+                        <li>
+                            <div class="remen-title layui-row">
+                                <a href="#">每个强者都会有背后的辛酸挫折每个强者都会有背后的辛酸挫个强者都会有背后个强者都会有背后折</a>
+                            </div>
+                            <div class="remen-readnum layui-row">阅读：2019</div>
+                        </li>
+                        <li>
+                            <div class="remen-title layui-row">
+                                <a href="#">每个强者都会有背后的辛酸挫折每个强者都会有背后的辛酸挫个强者都会有背后个强者都会有背后折</a>
+                            </div>
+                            <div class="remen-readnum layui-row">阅读：2019</div>
+                        </li>
+                        <li>
+                            <div class="remen-title layui-row">
+                                <a href="#">每个强者都会有背后的辛酸挫折每个强者都会有背后的辛酸挫个强者都会有背后个强者都会有背后折</a>
+                            </div>
+                            <div class="remen-readnum layui-row">阅读：2019</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="item-list">
+            <div class="article-content-box layui-row">
+                <h1>TinySTL 之 allocator 接口介绍</h1>
+                <div class="article-param layui-row">
+                    2022-5-26 <span><a href="#">大BUG</a></span><span>阅读数：2019</span><span>评论数：15</span>&nbsp;&nbsp;
+                    <span class="hz-span layui-badge layui-bg-gray">C++</span>
+                    <span class="hz-span layui-badge layui-bg-gray">泛型编程</span>
+                    <span class="hz-span layui-badge layui-bg-gray">小项目</span>
+                </div>
+                <div class="article-prompt">
+                    提示：此篇文章需要了解 C++ 泛型编程的一些概念才能看得懂本文章。
+                </div>
+                <article>
+                    <p>在学习 STL 设计的时候，最先学习的肯定是 allocator，这对应的是内存空间的分配和对象的建立。下面是 allocator 用到的接口</p>
+                    <blockquote><h3><b>成员类型</b></h3></blockquote>
+                        <p>
+                            <h4 align="center"><b> alloctor 数据成员</b></h4>
+                            <table border="0" cellspacing="0" cellpadding="0" style="margin:auto">
+                                <tr><th>类型</th>             <th>定义</th>
+                                <tr><td>value_type</td>       <td>T</td>
+                                <tr><td>pointer</td>          <td>T*</td>
+                                <tr><td>const_pointer</td>    <td>const T*</td>
+                                <tr><td>reference</td>        <td>const T&</td>
+                                <tr><td>const_reference</td>  <td>const T&</td>
+                                <tr><td>size_type</td>        <td>std::size</td>
+                                <tr><td>difference_type</td>  <td>std::ptrdiff_t</td>
+                            </table>
+                        </p>
+                    <blockquote><h3><b>成员函数</b></h3></blockquote>
+                        <p>
+                            <h4 align="center"><b> alloctor 成员函数</b></h4>
+                            <table border="0" cellspacing="0" cellpadding="0" style="margin:auto">
+                                <tr><th>函数</th>                               <th>定义</th>
+                                <tr><td>static T* <br>allocate();</td>                         <td>分配未初始化的存储</td>
+                                <tr><td>static T* <br>allocate(size_type n);</td>              <td>分配未初始化的存储</td>
+                                <tr><td>static void <br>deallocate(T *ptr);</td>                 <td>释放分配的内存</td>
+                                <tr><td>static void <br>deallocate(T *ptr, size_type n);</td>    <td>释放分配的内存</td>
+                                <tr><td>static void <br>construct(T *ptr);</td>                  <td>释放分配的内存</td>
+                                <tr><td>static void <br>construct(T *ptr, const T &value);</td>                        <td>在分配的内存创建对象</td>
+                                <tr><td>template &lt;class... Args&gt; <br> static void<br>construct(T *ptr, T &&value);</td>       <td>在分配的内存创建对象</td>
+                                <tr><td>static void <br>destroy(T *ptr);</td>                          <td>析构在内存中分配的对象</td>
+                                <tr><td>static void <br>destroy(T *first, T *last);</td>                          <td>析构在内存中分配的对象</td>
+                            </table>
+                        </p>
+                    
+                    <p>这个接口的设计来自于 <a href="https://zh.cppreference.com/w/cpp/memory/allocator"> std::allocate</a>  的接口介绍。</p>
+                    <blockquote><h3><b>源码</b></h3></blockquote>
+                    <p>关于源码部分的实现，主要借鉴于 <span style="color: rgb(65, 140, 175);">STL 源码剖析</span>这本书，并且 C++11 的一些新特性实现，通过模板 <markCode>template&lt;typename T &gt;</markCode>实现泛型编程。 
+                        <pre><code class="language-cpp">
+#ifndef TINYSTL_ALLOCATOR_H_
+#define TINYSTL_ALLOCATOR_H_
+
+// 这个头文件包含一个模板类 allocator，用于管理内存的分配、释放，对象的构造、析构
+
+#include "stl_construct.h"
+#include "util.h"
+
+namespace TinySTL
+{
+
+// 模板类：allocator
+// 模板函数代表数据类型
+template &lt;typename T&gt;
+class allocator
+{
+public:
+    typedef T            value_type;
+    typedef T*           pointer;
+    typedef const T*     const_pointer;
+    typedef T&           reference;
+    typedef const T&     const_reference;
+    typedef size_t       size_type;
+    typedef ptrdiff_t    difference_type;
+
+    public:
+    static T*   allocate();
+    static T*   allocate(size_type n);
+
+    static void deallocate(T* ptr);
+    static void deallocate(T* ptr, size_type n);
+
+    static void construct(T* ptr);
+    static void construct(T* ptr, const T& value);
+    static void construct(T* ptr, T&& value);
+
+    template &lt;typename... Args&gt;
+    static void construct(T* ptr, Args&& ...args);
+
+    static void destroy(T* ptr);
+    static void destroy(T* first, T* last);
+};
+
+template &lt;typename T&gt;
+T* allocator&lt;typename T&gt;::allocate()
+{
+    return static_cast&lt;T*&gt;(::operator new(sizeof(T)));
+}
+
+template &lt;typename T&gt;
+T* allocator&lt;T&gt;::allocate(size_type n)
+{
+    if (n == 0)
+        return nullptr;
+    return static_cast&lt;T*&gt;(::operator new(n * sizeof(T)));
+}
+
+template &lt;typename T&gt;
+void allocator&lt;T&gt;::deallocate(T* ptr)
+{
+    if (ptr == nullptr)
+        return;
+    ::operator delete(ptr);
+}
+
+template &lt;typename T&gt;
+void allocator&lt;T&gt;::deallocate(T* ptr, size_type /*size*/)
+{
+    if (ptr == nullptr)
+        return;
+    ::operator delete(ptr);
+}
+
+template &lt;typename T&gt;
+void allocator&lt;T&gt;::construct(T* ptr)
+{
+    TinySTL::construct(ptr);
+}
+
+template &lt;typename T&gt;
+void allocator&lt;T&gt;::construct(T* ptr, const T& value)
+{
+    TinySTL::construct(ptr, value);
+}
+
+template &lt;typename T&gt;
+void allocator&lt;T&gt;::construct(T* ptr, T&& value)
+{
+    TinySTL::construct(ptr, TinySTL::move(value));
+}
+
+template &lt;typename T&gt;
+template &lt;typename...Args&gt;
+void allocator&lt;T&gt;::construct(T* ptr, Args&& ...args)
+{
+    TinySTL::construct(ptr, TinySTL::forward<Args>(args)...);
+}
+
+template &lt;typename T&gt;
+void allocator&lt;T&gt;::destroy(T* ptr)
+{
+    TinySTL::destroy(ptr);
+}
+
+template &lt;typename T&gt;
+void allocator&lt;T&gt;::destroy(T* first, T* last)
+{
+    TinySTL::destroy(first, last);
+}
+
+} // namespace TinySTL
+#endif // !TINYSTL_ALLOCATOR_H_
+                        </code></pre>
+                    </p>
+                    <blockquote><h3><b>测试</b></h3></blockquote>
+                    <p>
+                        测试的例子如下
+                    </p>
+                </article>
+                <link rel="stylesheet" href="../css/gittalk.css">
+                <script src="../js/gittalk.js"></script>
+                <div id="commentContainer"> </div>
+                <script>
+                    const gitalk = new Gitalk({
+                        clientID: '1c4831adc1089da8523c',
+                        clientSecret: 'f09eb05941ca14f7ac95a1e83ba8759850934868',
+                        repo: 'HamsterCoderSim.github.io',      // The repository of store comments,
+                        owner: 'HamsterCoderSim',
+                        admin: ['HamsterCoderSim'],
+                        id: location.pathname,      // Ensure uniqueness and length less than 50
+                        distractionFreeMode: false  // Facebook-like distraction free mode
+                    })
+                    gitalk.render('commentContainer')
+                </script>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-box">
+            <div class="main-content">
+                <strong>Copyright</strong> &nbsp;2019.01.16  &nbsp;by  &nbsp;<a href="#">大BUG</a><span>备案号：<a href="http://www.miitbeian.gov.cn/" target="_blank">蜀ICP备16031990号-2</a></span>
+            </div>
+        </div>
+    </footer>
+<script src="../../plugin/layui/layui.js"></script>
+<script>
+    layui.use('laypage', function(){
+        var laypage = layui.laypage;
+
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'pageItem', //注意，这里的 test1 是 ID，不用加 # 号
+            count: 50, //数据总数，从服务端得到
+            jump: function(obj, first){
+                //obj包含了当前分页的所有参数，比如：
+                console.log('当前页数：'+obj.curr); //得到当前页，以便向服务端请求对应页的数据。
+                console.log('每页数量：'+obj.limit); //得到每页显示的条数
+                //首次不执行
+                if(!first){
+                   console.log('执行')
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
